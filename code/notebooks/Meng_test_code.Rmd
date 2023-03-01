@@ -1,0 +1,55 @@
+---
+title: "Meng_test_02232023"
+author: "Meng Li"
+date: "2023-02-24"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+## Trying different things based on BM's NewRegressionAFT.R code
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(lme4)
+library(ggplot2)
+
+```
+
+## Read data
+```{r data}
+all_data <- readRDS("data/all_data_2020.08.07.rds") 
+all.data.stan <- readRDS("data/all_data_stan_2020.08.07.rds") # ML: this is the standardized data?
+
+```
+
+## Try visualize the relationship between SOM and Yield in different ways
+
+```{r plot}
+# plot the data
+ggplot(data = all_data, aes(x = ssurgo_om_mean, y = Yield_decomp_add))+
+  geom_jitter(aes(color = state_alpha))+
+  #geom_smooth()   #looks like a saturation curve y=(x)^(1/2)
+  geom_smooth(method="lm")
+
+# separate by different states
+ggplot(data = all_data, aes(x = ssurgo_om_mean, y = Yield_decomp_add))+
+  geom_jitter()+
+  geom_smooth(method="lm") +
+  facet_wrap(~state_alpha)
+
+# separate by different year; SOM is the same for all years 
+ggplot(data = all_data, aes(x = ssurgo_om_mean, y = Yield_decomp_add))+
+  geom_jitter()+
+  geom_smooth(method="lm") +
+  facet_wrap(~ year)
+  
+# separate by different soils
+ggplot(data = all_data, aes(x = ssurgo_om_mean, y = Yield_decomp_add))+
+  geom_jitter()+
+  geom_smooth(method="lm") +
+  facet_wrap(~ssurgo_order_mode)
+
+```
